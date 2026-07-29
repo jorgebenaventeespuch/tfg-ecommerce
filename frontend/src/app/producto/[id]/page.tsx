@@ -1,4 +1,3 @@
-import { products } from "@/data/products";
 import { notFound } from "next/navigation";
 import AddToCart from "@/components/AddToCart";
 
@@ -6,9 +5,21 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
+async function getProduct(id: string) {
+  const res = await fetch(`http://localhost:8000/productos/${id}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    return null;
+  }
+
+  return res.json();
+}
+
 export default async function ProductoDetallePage({ params }: PageProps) {
   const { id } = await params;
-  const product = products.find((p) => p.id === id);
+  const product = await getProduct(id);
 
   if (!product) {
     notFound();

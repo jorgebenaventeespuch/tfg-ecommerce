@@ -9,6 +9,7 @@ export default function CheckoutPage() {
   const items = useCartStore((state) => state.items);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const clearCart = useCartStore((state) => state.clearCart);
+  const [sending, setSending] = useState(false);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -28,14 +29,46 @@ export default function CheckoutPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Datos del pedido:", formData);
-    console.log("Productos:", items);
-    console.log("Total:", getTotalPrice());
+    setSending(true);
 
-    clearCart();
-    router.push("/checkout/exito");
+    const orderData = {
+      customer_name: `${formData.nombre} ${formData.apellidos}`,
+      customer_email: formData.email,
+      customer_phone: formData.telefono,
+      address: `${formData.direccion}, ${formData.codigoPostal} ${formData.ciudad}`,
+      city: formData.ciudad,
+      postal_code: formData.codigoPostal,
+      country: formData.pais,
+      total: getTotalPrice(),
+      items: items.map((item) => ({
+        product_id: item.product.id,
+        product_name: item.product.name,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.product.price,
+      })),
+    };
+
+    try {
+      const res = await fetch("http://localhost:8000/pedidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      if (res.ok) {
+        clearCart();
+        router.push("/checkout/exito");
+      } else {
+        router.push("/checkout/error");
+      }
+    } catch {
+      router.push("/checkout/error");
+    }
+
+    setSending(false);
   };
 
   if (items.length === 0) {
@@ -162,9 +195,10 @@ export default function CheckoutPage() {
 
           <button
             type="submit"
-            className="w-full bg-black text-white py-3 hover:bg-gray-800 transition-colors mt-6"
+            disabled={sending}
+            className="w-full bg-black text-white py-3 hover:bg-gray-800 transition-colors mt-6 disabled:bg-gray-400"
           >
-            Pagar {getTotalPrice().toFixed(2)} €
+            {sending ? "Procesando..." : `Pagar ${getTotalPrice().toFixed(2)} €`}
           </button>
         </form>
 
