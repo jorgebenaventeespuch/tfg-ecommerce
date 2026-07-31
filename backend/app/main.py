@@ -42,8 +42,7 @@ app = FastAPI(title="GUTZDEPT API", description="API del e-commerce GUTZDEPT")
 # ============================================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
+allow_origins=["http://localhost:3000", "https://tfg-ecommerce.vercel.app"],    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -182,10 +181,9 @@ def create_checkout_session(order_data: OrderCreate, db: Session = Depends(get_d
             line_items=line_items,
             mode="payment",
             # A dónde redirigir si el pago es exitoso
-            success_url="http://localhost:3000/checkout/exito?session_id={CHECKOUT_SESSION_ID}",
+            success_url=os.getenv("FRONTEND_URL", "http://localhost:3000") + "/checkout/exito?session_id={CHECKOUT_SESSION_ID}",
             # A dónde redirigir si el usuario cancela
-            cancel_url="http://localhost:3000/checkout/error",
-            # Guardamos el ID del pedido para identificarlo después
+            cancel_url=os.getenv("FRONTEND_URL", "http://localhost:3000") + "/checkout/error",            # Guardamos el ID del pedido para identificarlo después
             metadata={"order_id": str(order.id)},
         )
     except Exception as e:
