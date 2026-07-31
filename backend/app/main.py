@@ -25,7 +25,11 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 # Crear las tablas en la base de datos si no existen
 Base.metadata.create_all(bind=engine)
-
+# ============================================================
+# Precargar productos si la base de datos está vacía
+# ============================================================
+from app.seed import seed
+seed()
 # Crear la aplicación FastAPI con título y descripción
 app = FastAPI(title="GUTZDEPT API", description="API del e-commerce GUTZDEPT")
 
