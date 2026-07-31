@@ -22,6 +22,7 @@ export default function CheckoutPage() {
     telefono: "",
   });
 
+  // Actualiza el estado del formulario cuando el usuario escribe en un campo
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
@@ -29,10 +30,12 @@ export default function CheckoutPage() {
     });
   };
 
+  // Se ejecuta cuando el usuario pulsa "Pagar"
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
 
+    // Construir el objeto con los datos del pedido
     const orderData = {
       customer_name: `${formData.nombre} ${formData.apellidos}`,
       customer_email: formData.email,
@@ -51,16 +54,21 @@ export default function CheckoutPage() {
       })),
     };
 
+    // Enviar los datos al backend para crear la sesión de pago en Stripe
     try {
-      const res = await fetch("http://localhost:8000/pedidos", {
+      const res = await fetch("http://localhost:8000/crear-sesion-pago", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
       });
 
       if (res.ok) {
+        // El backend devuelve la URL de Stripe
+        const data = await res.json();
+        // Vaciamos el carrito antes de redirigir
         clearCart();
-        router.push("/checkout/exito");
+        // Redirigimos al usuario a la pantalla de pago de Stripe
+        window.location.href = data.url;
       } else {
         router.push("/checkout/error");
       }
@@ -71,6 +79,7 @@ export default function CheckoutPage() {
     setSending(false);
   };
 
+  // Si el carrito está vacío, mostrar mensaje
   if (items.length === 0) {
     return (
       <main className="px-8 py-12">
@@ -87,6 +96,7 @@ export default function CheckoutPage() {
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {/* --- Formulario de datos de envío --- */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <h2 className="text-xl font-medium mb-4">Datos de envío</h2>
 
@@ -193,6 +203,7 @@ export default function CheckoutPage() {
             />
           </div>
 
+          {/* Botón de pago: muestra "Procesando..." mientras se envía */}
           <button
             type="submit"
             disabled={sending}
@@ -202,6 +213,7 @@ export default function CheckoutPage() {
           </button>
         </form>
 
+        {/* --- Resumen del pedido --- */}
         <div>
           <h2 className="text-xl font-medium mb-4">Resumen del pedido</h2>
 
