@@ -56,8 +56,7 @@ export default function CheckoutPage() {
 
     // Enviar los datos al backend para crear la sesión de pago en Stripe
     try {
-      const res = await fetch("http://localhost:8000/crear-sesion-pago", {
-        method: "POST",
+const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/crear-sesion-pago`, {        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
       });

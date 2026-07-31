@@ -1,8 +1,7 @@
 import ProductList from "@/components/ProductList";
 
 async function getProducts() {
-  const res = await fetch("http://localhost:8000/productos", {
-    cache: "no-store",
+const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productos`, {    cache: "no-store",
   });
 
   if (!res.ok) {
