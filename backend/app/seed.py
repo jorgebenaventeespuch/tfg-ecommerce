@@ -1,58 +1,52 @@
 from app.database import engine, SessionLocal, Base
 from app.models import Product
 
-# Crear las tablas si no existen
 Base.metadata.create_all(bind=engine)
 
-# Datos ficticios (los mismos que tenías en el frontend)
 products_data = [
     {
         "id": "1",
-        "name": "Camiseta oversize negra",
-        "price": 35,
-        "image": "https://placehold.co/600x800/000000/FFFFFF?text=Camiseta+Negra",
-        "category": "camisetas",
+        "name": "Minding Our Business Tee",
+        "price": 25,
+        "image": "/mindingrosa.png",
+        "hover_image": None,
+        "images": "/mindingrosa.png,/fotocamisrosa1.jpg,/fotocamirosa2.jpg",
+        "category": "t-shirts",
         "sizes": "S,M,L,XL",
+        "description": "Minding our Business. 275 GSM 100% Algodón. Model is 1.80cm, wearing M size.",
     },
     {
         "id": "2",
-        "name": "Sudadera con capucha gris",
-        "price": 65,
-        "image": "https://placehold.co/600x800/808080/FFFFFF?text=Sudadera+Gris",
-        "category": "sudaderas",
-        "sizes": "S,M,L",
+        "name": "Athletics Tee",
+        "price": 25,
+        "image": "/athletics.png",
+        "hover_image": None,
+        "images": "/athletics.png",
+        "category": "t-shirts",
+        "sizes": "S,M,L,XL",
+        "description": "Gutzdept Athletics 2025. 275 GSM 100% Algodón. Model is 1.80cm, wearing M size.",
     },
     {
         "id": "3",
-        "name": "Pantalón cargo verde",
-        "price": 80,
-        "image": "https://placehold.co/600x800/4A5D23/FFFFFF?text=Cargo+Verde",
-        "category": "pantalones",
-        "sizes": "M,L,XL",
+        "name": "No Cap Trucker Hat",
+        "price": 30,
+        "image": "/gorra-front.png",
+        "hover_image": "/gorra-side.png",
+        "images": "/gorra-front.png,/gorra-side.png,/gorra-diagonal.png,/gorra-detras.png",
+        "category": "accessories",
+        "sizes": "One Size",
+        "description": "No Cap Trucker Hat. Embroidered logo. One size fits all. Adjustable snapback.",
     },
     {
         "id": "4",
-        "name": "Camiseta gráfica blanca",
-        "price": 40,
-        "image": "https://placehold.co/600x800/FFFFFF/000000?text=Camiseta+Blanca",
-        "category": "camisetas",
-        "sizes": "S,M,L",
-    },
-    {
-        "id": "5",
-        "name": "Chaqueta acolchada negra",
-        "price": 120,
-        "image": "https://placehold.co/600x800/1A1A1A/FFFFFF?text=Chaqueta",
-        "category": "chaquetas",
-        "sizes": "M,L,XL",
-    },
-    {
-        "id": "6",
-        "name": "Gorra logo bordado",
-        "price": 25,
-        "image": "https://placehold.co/600x800/2C2C2C/FFFFFF?text=Gorra",
-        "category": "accesorios",
-        "sizes": "Única",
+        "name": "Grind and Pray Hoodie",
+        "price": 55,
+        "image": "/hoodie.jpg",
+        "hover_image": "/side.png",
+        "images": "/hoodie.jpg,/side.png,/sudadera-foto1.jpg,/sudadera-foto2.jpg",
+        "category": "hoodies",
+        "sizes": "S,M,L,XL",
+        "description": "Grind and Pray. 400 GSM heavyweight hoodie. Embroidered logo. Model is 1.80cm, wearing M size.",
     },
 ]
 
@@ -60,14 +54,9 @@ products_data = [
 def seed():
     db = SessionLocal()
 
-    # Comprobar si ya hay productos para no duplicar
-    existing = db.query(Product).count()
-    if existing > 0:
-        print(f"La base de datos ya tiene {existing} productos. No se añaden más.")
-        db.close()
-        return
+    db.query(Product).delete()
+    db.commit()
 
-    # Insertar los productos
     for product_data in products_data:
         product = Product(**product_data)
         db.add(product)

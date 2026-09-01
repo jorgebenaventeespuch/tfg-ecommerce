@@ -1,21 +1,20 @@
 from pydantic import BaseModel
 
 
-# --- Productos ---
-
 class ProductOut(BaseModel):
     id: str
     name: str
     price: float
     image: str
+    hover_image: str | None = None
+    images: list[str] = []
     category: str
     sizes: list[str]
+    description: str | None = None
 
     class Config:
         from_attributes = True
 
-
-# --- Pedidos ---
 
 class OrderItemCreate(BaseModel):
     product_id: str
@@ -59,4 +58,3 @@ class OrderOut(BaseModel):
 
     class Config:
         from_attributes = True
-        

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, String, Float, Integer, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 from app.database import Base
@@ -11,8 +11,11 @@ class Product(Base):
     name = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     image = Column(String, nullable=False)
+    hover_image = Column(String, nullable=True)
+    images = Column(Text, nullable=True)
     category = Column(String, nullable=False)
-    sizes = Column(String, nullable=False)  # Guardamos las tallas como string separado por comas: "S,M,L,XL"
+    sizes = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
 
 
 class Order(Base):

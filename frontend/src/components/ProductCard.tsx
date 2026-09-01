@@ -1,23 +1,35 @@
-import Link from "next/link"; //para hacer que toda la tarjeta sea un enlace clicable
-import { Product } from "@/data/products"; //es el tipo que definimos en products.ts. Lo importamos para tipar las props
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { Product } from "@/data/products";
 
 type ProductCardProps = {
   product: Product;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const hasHoverImage = product.hover_image !== null;
+  const displayImage = isHovered && hasHoverImage ? product.hover_image : product.image;
+
   return (
-    <Link href={`/producto/${product.id}`} className="group">
-      <div className="overflow-hidden bg-gray-100 aspect-[3/4]">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-      </div>
-      <div className="mt-2">
-        <h3 className="text-sm font-medium">{product.name}</h3>
-        <p className="text-sm text-gray-600">{product.price} €</p>
+    <Link href={`/producto/${product.id}`}>
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="aspect-square flex items-center justify-center p-4 overflow-hidden">
+          <img
+            src={displayImage!}
+            alt={product.name}
+            className={`max-h-full max-w-full object-contain transition-transform duration-300 ${
+              isHovered && !hasHoverImage ? "scale-110" : "scale-100"
+            }`}
+          />
+        </div>
+        <p className="text-center font-medium mt-2">{product.price.toFixed(2)} €</p>
       </div>
     </Link>
   );
