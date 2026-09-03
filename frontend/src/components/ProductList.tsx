@@ -24,10 +24,10 @@ export default function ProductList({ products }: ProductListProps) {
           <button
             key={category}
             onClick={() => setSelectedCategory(category)}
-            className={`uppercase tracking-wider transition-opacity ${
+            className={`uppercase tracking-wider transition-colors px-3 py-1 text-sm ${
               selectedCategory === category
-                ? "font-bold underline underline-offset-4"
-                : "text-gray-500 hover:text-black"
+                ? "bg-[#316AC5] text-white rounded-sm"
+                : "text-black hover:bg-[#316AC5] hover:text-white rounded-sm"
             }`}
           >
             {category}

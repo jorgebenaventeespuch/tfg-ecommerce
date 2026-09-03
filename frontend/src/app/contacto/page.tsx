@@ -1,40 +1,50 @@
+import WindowFrame from "@/components/WindowFrame";
+
 export default function ContactoPage() {
   return (
-    <main className="px-8 py-12 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Contacto</h1>
+    <main className="max-w-4xl mx-auto px-8 py-8">
+      <WindowFrame title="Contact - GUTZDEPT">
+        <div className="p-8">
+          <h1 className="text-3xl font-bold mb-6">Contact</h1>
 
-      <div className="space-y-6 text-gray-700 leading-relaxed">
-        <p>
-          Para cualquier consulta sobre productos, pedidos o colaboraciones,
-          puedes contactar con nosotros a través de los siguientes canales.
-        </p>
+          <div className="space-y-6 text-sm">
+            <div>
+              <h2 className="font-bold text-lg mb-2">Email</h2>
+              <p className="text-gray-700">info@gutzdept.com</p>
+            </div>
 
-        <div className="space-y-4 pt-4">
-          <div>
-            <h2 className="font-bold mb-1">Email</h2>
-            <p>info@gutzdept.com</p>
-          </div>
+            <div>
+              <h2 className="font-bold text-lg mb-2">Instagram</h2>
 
-          <div>
-            <h2 className="font-bold mb-1">Instagram</h2>
-            <p>@gutzdept</p>
-          </div>
+              <a
+                href="https://www.instagram.com/gutzdept/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#316AC5] hover:underline"
+              >
+                @gutzdept
+              </a>
+            </div>
 
-          <div>
-            <h2 className="font-bold mb-1">Horario de atención</h2>
-            <p>Lunes a viernes, de 10:00 a 18:00</p>
+            <div>
+              <h2 className="font-bold text-lg mb-2">Customer Support</h2>
+              <p className="text-gray-700">
+                Monday to Friday, 10:00 - 18:00 (CET)
+              </p>
+            </div>
+
+            <div>
+              <h2 className="font-bold text-lg mb-2">Returns Policy</h2>
+              <p className="text-gray-700">
+                You have 14 days from receiving your order to request a return
+                or exchange. Items must be unworn, unwashed, and in original
+                packaging. Contact us via email or Instagram to start the
+                process.
+              </p>
+            </div>
           </div>
         </div>
-
-        <div className="pt-6">
-          <h2 className="text-xl font-bold mb-4">Devoluciones</h2>
-          <p>
-            Aceptamos devoluciones dentro de los 14 días posteriores a la
-            recepción del pedido. La prenda debe estar en su estado original,
-            sin usar y con la etiqueta puesta.
-          </p>
-        </div>
-      </div>
+      </WindowFrame>
     </main>
   );
 }
