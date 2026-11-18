@@ -18,10 +18,8 @@ class ProductOut(BaseModel):
 
 class OrderItemCreate(BaseModel):
     product_id: str
-    product_name: str
     size: str
     quantity: int
-    price: float
 
 
 class OrderCreate(BaseModel):
@@ -32,7 +30,6 @@ class OrderCreate(BaseModel):
     city: str
     postal_code: str
     country: str
-    total: float
     items: list[OrderItemCreate]
 
 

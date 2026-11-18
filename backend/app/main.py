@@ -81,6 +81,27 @@ def get_product(product_id: str, db: Session = Depends(get_db)):
 
 @app.post("/crear-sesion-pago")
 def create_checkout_session(order_data: OrderCreate, db: Session = Depends(get_db)):
+    # Validar productos y obtener precios de la BBDD (nunca del frontend)
+    order_items_data = []
+    total = 0.0
+
+    for item in order_data.items:
+        product = db.query(Product).filter(Product.id == item.product_id).first()
+        if not product:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Producto con id '{item.product_id}' no encontrado",
+            )
+        order_items_data.append({
+            "product_id": product.id,
+            "product_name": product.name,
+            "size": item.size,
+            "quantity": item.quantity,
+            "price": product.price,
+        })
+        total += product.price * item.quantity
+
+    # Crear el pedido con el total calculado por el backend
     order = Order(
         customer_name=order_data.customer_name,
         customer_email=order_data.customer_email,
@@ -89,37 +110,38 @@ def create_checkout_session(order_data: OrderCreate, db: Session = Depends(get_d
         city=order_data.city,
         postal_code=order_data.postal_code,
         country=order_data.country,
-        total=order_data.total,
+        total=total,
         status="pending",
     )
     db.add(order)
     db.flush()
 
-    for item in order_data.items:
+    for item_data in order_items_data:
         order_item = OrderItem(
             order_id=order.id,
-            product_id=item.product_id,
-            product_name=item.product_name,
-            size=item.size,
-            quantity=item.quantity,
-            price=item.price,
+            product_id=item_data["product_id"],
+            product_name=item_data["product_name"],
+            size=item_data["size"],
+            quantity=item_data["quantity"],
+            price=item_data["price"],
         )
         db.add(order_item)
 
     db.commit()
     db.refresh(order)
 
+    # Crear line_items de Stripe con precios de la BBDD
     line_items = []
-    for item in order_data.items:
+    for item_data in order_items_data:
         line_items.append({
             "price_data": {
                 "currency": "eur",
                 "product_data": {
-                    "name": f"{item.product_name} (Talla {item.size})",
+                    "name": f"{item_data['product_name']} (Talla {item_data['size']})",
                 },
-                "unit_amount": int(item.price * 100),
+                "unit_amount": int(item_data["price"] * 100),
             },
-            "quantity": item.quantity,
+            "quantity": item_data["quantity"],
         })
 
     try:

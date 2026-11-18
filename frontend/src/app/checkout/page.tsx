@@ -42,13 +42,10 @@ export default function CheckoutPage() {
       city: formData.ciudad,
       postal_code: formData.codigoPostal,
       country: formData.pais,
-      total: getTotalPrice(),
       items: items.map((item) => ({
         product_id: item.product.id,
-        product_name: item.product.name,
         size: item.size,
         quantity: item.quantity,
-        price: item.product.price,
       })),
     };
 
